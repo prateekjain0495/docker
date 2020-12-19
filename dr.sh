@@ -1,7 +1,5 @@
+ID=$(gcloud info --format='value(config.project)')
 docker run hello-world
-docker images
-docker run hello-world
-docker ps
 mkdir test && cd test
 cat > Dockerfile <<EOF
 # Use an official Node runtime as the parent image
@@ -18,7 +16,9 @@ EXPOSE 80
 
 # Run app.js using node when the container launches
 CMD ["node", "app.js"]
-EOFcat > app.js <<EOF
+EOF
+
+cat > app.js <<EOF
 const http = require('http');
 
 const hostname = '0.0.0.0';
@@ -38,12 +38,21 @@ process.on('SIGINT', function() {
     console.log('Caught interrupt signal and will exit');
     process.exit();
 });
-EOF
+
 docker build -t node-app:0.1 .
-docker images
-docker run -p 4000:80 --name my-app node-app:0.1
-curl http://localhost:4000
+docker run -d -p 4000:80 --name my-app node-app:0.1
 docker stop my-app && docker rm my-app
-docker run -p 4000:80 --name my-app -d node-app:0.1
-docker ps
-vim app.js
+docker run -d -p 4000:80 --name my-app -d node-app:0.1
+
+sed -i 's/Hello World/Welcome to Cloud/g'
+docker build -t node-app:0.2 .
+docker run -d -p 8080:80 --name my-app-2 -d node-app:0.2
+docker tag node-app:0.2 gcr.io/$ID/node-app:0.2
+docker push gcr.io/$ID/node-app:0.2
+docker stop $(docker ps -q)
+docker rm $(docker ps -aq)
+docker rmi node-app:0.2 gcr.io/$ID/node-app node-app:0.1
+docker rmi node:6
+docker rmi $(docker images -aq) # remove remaining images
+
+echo "Lab Completed"
