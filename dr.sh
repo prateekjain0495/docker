@@ -16,7 +16,6 @@ EXPOSE 80
 
 # Run app.js using node when the container launches
 CMD ["node", "app.js"]
-EOF
 
 cat > app.js <<EOF
 const http = require('http');
