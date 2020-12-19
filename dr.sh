@@ -46,3 +46,4 @@ curl http://localhost:4000
 docker stop my-app && docker rm my-app
 docker run -p 4000:80 --name my-app -d node-app:0.1
 docker ps
+vim app.js
