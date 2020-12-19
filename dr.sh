@@ -16,6 +16,7 @@ EXPOSE 80
 
 # Run app.js using node when the container launches
 CMD ["node", "app.js"]
+EOF
 
 cat > app.js <<EOF
 const http = require('http');
@@ -37,6 +38,7 @@ process.on('SIGINT', function() {
     console.log('Caught interrupt signal and will exit');
     process.exit();
 });
+EOF
 
 docker build -t node-app:0.1 .
 docker run -d -p 4000:80 --name my-app node-app:0.1
