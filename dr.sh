@@ -45,7 +45,7 @@ docker run -d -p 4000:80 --name my-app node-app:0.1
 docker stop my-app && docker rm my-app
 docker run -d -p 4000:80 --name my-app -d node-app:0.1
 
-sed -i 's/Hello World/Welcome to Cloud/g'
+sed -i 's/Hello World/Welcome to Cloud/g' app.js
 docker build -t node-app:0.2 .
 docker run -d -p 8080:80 --name my-app-2 -d node-app:0.2
 docker tag node-app:0.2 gcr.io/$ID/node-app:0.2
